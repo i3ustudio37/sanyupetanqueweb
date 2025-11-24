@@ -65,6 +65,26 @@
 </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/index.tsx"></script>
+    <!-- Global Error Handler to debug black screens -->
+    <div id="global-error" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); color:red; padding:20px; z-index:9999; overflow:auto;">
+      <h2 style="color:white; border-bottom:1px solid #333; padding-bottom:10px;">Startup Error</h2>
+      <pre id="error-content" style="white-space:pre-wrap;"></pre>
+      <button onclick="document.getElementById('global-error').style.display='none'" style="margin-top:20px; padding:10px 20px; background:#333; color:white; border:none; cursor:pointer;">Close</button>
+    </div>
+    <script>
+      window.addEventListener('error', function(event) {
+        var errorDiv = document.getElementById('global-error');
+        var contentDiv = document.getElementById('error-content');
+        errorDiv.style.display = 'block';
+        contentDiv.textContent += 'Error: ' + event.message + '\nFilename: ' + event.filename + '\nLine: ' + event.lineno + '\n\n';
+      });
+      window.addEventListener('unhandledrejection', function(event) {
+        var errorDiv = document.getElementById('global-error');
+        var contentDiv = document.getElementById('error-content');
+        errorDiv.style.display = 'block';
+        contentDiv.textContent += 'Promise Rejection: ' + event.reason + '\n\n';
+      });
+    </script>
+    <script type="module" src="./index.tsx"></script>
   </body>
 </html>

@@ -78,7 +78,7 @@ const CalendarSection: React.FC<CalendarSectionProps> = ({ isAdmin }) => {
       }}
     >
       {/* Decorative BG */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-sanyu-red-5 rounded-full blur-3xl pointer-events-none"></div>
+      <div className="absolute top-0 right-0 w-96 h-96 bg-sanyu-red-5 rounded-full opacity-50 blur-xl pointer-events-none"></div>
 
       <div className="container mx-auto px-4 relative z-10">
         <div className="flex flex-col md:flex-row justify-between items-end mb-10 border-b border-gray-800 pb-4">

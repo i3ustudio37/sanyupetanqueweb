@@ -269,7 +269,7 @@ const SpotlightTitle = () => {
       } as React.CSSProperties}
     >
       {/* Base Text (Darker/Dimmed) - Updated color to #c2144e as requested */}
-      <h1 className="text-5xl md:text-7xl font-black italic uppercase leading-[1.6] text-[#c2144e] py-4 pr-4">
+      <h1 className="text-5xl md:text-7xl font-black italic uppercase leading-[1.6] py-4 pr-4" style={{ color: '#c2144e' }}>
         精準<br />策略<br />勝利
       </h1>
       
@@ -399,9 +399,12 @@ const App: React.FC = () => {
         />
 
         {/* Abstract Background Shapes */}
-        <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-sanyu-red rounded-full blur-[128px] opacity-10 animate-pulse pointer-events-none"></div>
+        <div 
+          className="absolute -bottom-32 -right-32 w-96 h-96 bg-sanyu-red rounded-full opacity-10 animate-pulse pointer-events-none"
+          style={{ filter: 'blur(128px)' }}
+        ></div>
 
-        <div className="container mx-auto px-4 relative z-10 grid md:grid-cols-2 gap-8 items-center h-full min-h-[calc(100vh-80px)]">
+        <div className="container mx-auto px-4 relative z-10 grid md:grid-cols-2 gap-8 items-center h-full min-h-screen" style={{ minHeight: 'calc(100vh - 80px)' }}>
           
           {/* Left Column: Visuals (Layer 43 & 44) - Moved from Right to Left as per image.png */}
           <div className="order-1 md:order-1 relative w-full h-full flex items-center justify-center md:justify-start pointer-events-none md:pointer-events-auto">
@@ -450,7 +453,10 @@ const App: React.FC = () => {
             </div>
 
             <NavLink href="#calendar">
-               <span className="inline-flex items-center gap-2 bg-white text-black hover:bg-sanyu-red hover:text-white font-bold py-4 px-8 rounded-full transition-all transform hover:scale-105 shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:shadow-neon-glow cursor-pointer">
+               <span 
+                 className="inline-flex items-center gap-2 bg-white text-black hover:bg-sanyu-red hover:text-white font-bold py-4 px-8 rounded-full transition-all transform hover:scale-105 shadow-neon-glow cursor-pointer"
+                 style={{ boxShadow: '0 0 20px rgba(255,255,255,0.1)' }}
+               >
                   查看行事曆
                </span>
             </NavLink>

@@ -322,14 +322,14 @@ const HistorySection: React.FC<HistorySectionProps> = ({ isAdmin }) => {
                     const tooltipYOffset = isHighPoint ? 20 : -160; 
 
                     return (
-                      <g key={d.year} className="group/point cursor-pointer">
+                      <g key={d.year} className="point-group cursor-pointer">
                          {/* X-Axis Label */}
-                         <text x={x} y={height - paddingY + 25} textAnchor="middle" fill="#888" fontSize="14" className="group-hover/point:fill-white group-hover/point:font-bold transition-colors cursor-default">
+                         <text x={x} y={height - paddingY + 25} textAnchor="middle" fill="#888" fontSize="14" className="point-hover-fill transition-colors cursor-default">
                           {d.year}
                         </text>
 
                         {/* Hover Line */}
-                        <line x1={x} y1={paddingY} x2={x} y2={height - paddingY} stroke="#444" strokeWidth="1" opacity="0" className="group-hover/point:opacity-100 transition-opacity" />
+                        <line x1={x} y1={paddingY} x2={x} y2={height - paddingY} stroke="#444" strokeWidth="1" className="point-hover-opacity transition-opacity" />
 
                         {/* Active Point Circle Group */}
                         <g transform={`translate(${x}, ${y})`}>
@@ -337,7 +337,7 @@ const HistorySection: React.FC<HistorySectionProps> = ({ isAdmin }) => {
                             <circle r="25" fill="transparent" />
                             
                             {/* Visible Dot */}
-                            <circle r="4" fill="#18181b" stroke={showTotal ? "#e6004c" : "#888"} strokeWidth="2" className="group-hover/point:r-6 transition-all" />
+                            <circle r="4" fill="#18181b" stroke={showTotal ? "#e6004c" : "#888"} strokeWidth="2" className="point-hover-radius transition-all" />
                         </g>
                         
                         {/* Special Markers (Strict Filtered) */}
@@ -356,7 +356,7 @@ const HistorySection: React.FC<HistorySectionProps> = ({ isAdmin }) => {
                         })}
 
                         {/* Tooltip */}
-                        <g transform={`translate(${x}, ${y})`} className="opacity-0 group-hover/point:opacity-100 transition-opacity pointer-events-none z-50">
+                        <g transform={`translate(${x}, ${y})`} className="point-hover-opacity transition-opacity pointer-events-none z-50">
                            <g transform={`translate(0, ${tooltipYOffset})`}>
                                {/* Tooltip Container */}
                                <rect 

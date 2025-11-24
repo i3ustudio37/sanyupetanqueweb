@@ -43,6 +43,7 @@
       .bg-zinc-800 { background-color: #27272a; }
       .bg-zinc-900 { background-color: #18181b; }
       .border-zinc-800 { border-color: #27272a; }
+      .hover\:bg-zinc-700:hover { background-color: #3f3f46; }
 
       /* Color Opacities */
       .bg-sanyu-red-5 { background-color: rgba(230, 0, 76, 0.05); }
@@ -68,6 +69,7 @@
       
       .text-white-10 { color: rgba(255, 255, 255, 0.1); }
       .border-white-5 { border-color: rgba(255, 255, 255, 0.05); }
+      .border-white-50 { border-color: rgba(255, 255, 255, 0.5); }
 
       /* Shadows */
       .shadow-neon { box-shadow: 0 0 10px #e6004c; }
@@ -80,15 +82,31 @@
       /* Layout & Interactions */
       .aspect-square { aspect-ratio: 1 / 1; }
       .min-w-800 { min-width: 800px; }
+      .backdrop-blur-sm { backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
+      .backdrop-blur-md { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
       
       .focus\:ring-sanyu-red:focus { --tw-ring-color: var(--sanyu-red); }
       .focus\:border-sanyu-red:focus { border-color: var(--sanyu-red); }
       .hover\:bg-sanyu-red-80:hover { background-color: rgba(230, 0, 76, 0.8); }
+      .hover\:text-sanyu-red:hover { color: var(--sanyu-red); }
+      .hover\:border-sanyu-red-30:hover { border-color: rgba(230, 0, 76, 0.3); }
       
+      /* Group Hover Replacements */
       .group:hover .group-hover\:text-sanyu-red { color: var(--sanyu-red); }
       .group:hover .group-hover\:scale-110 { transform: scale(1.1); }
       .group:hover .group-hover\:opacity-100 { opacity: 1; }
+      .group:hover .group-hover\:drop-shadow-neon { filter: drop-shadow(0 0 8px rgba(230, 0, 76, 1)); }
 
+      /* Custom Chart Hover Logic (Replacing named groups) */
+      .point-group .point-hover-opacity { opacity: 0; transition: opacity 0.3s; }
+      .point-group:hover .point-hover-opacity { opacity: 1; }
+      
+      .point-group .point-hover-fill { fill: #888; transition: fill 0.3s; }
+      .point-group:hover .point-hover-fill { fill: white; font-weight: bold; }
+      
+      .point-group .point-hover-radius { transition: r 0.3s; }
+      .point-group:hover .point-hover-radius { r: 6; }
+      
       /* Specific Yellow Styles */
       .bg-yellow-900-40 { background-color: rgba(113, 63, 18, 0.4); }
       .bg-yellow-900-50 { background-color: rgba(113, 63, 18, 0.5); }
@@ -99,6 +117,8 @@
       @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
       @keyframes slideInLeft { from { transform: translateX(-2rem); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
       .animate-fade-in-slide { animation: fadeIn 1s ease-out, slideInLeft 1s ease-out; }
+      .animate-pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+      @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
     </style>
   <script type="importmap">
 {

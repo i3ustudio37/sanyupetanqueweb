@@ -3,6 +3,22 @@ import { YearRecord, CalendarEvent } from './types';
 // Initial Calendar Events (Sample data to populate the calendar)
 export const INITIAL_EVENTS: CalendarEvent[] = [
   { id: '1', date: new Date().toISOString().split('T')[0], title: '球隊練習', time: '16:00 - 17:30', type: 'practice' },
+  { 
+    id: '2026-edu-1', 
+    date: '2026-01-03', 
+    title: '台北市教育盃', 
+    time: '08:00 - 17:00', 
+    type: 'competition',
+    location: '台北市永春高中'
+  },
+  { 
+    id: '2026-edu-2', 
+    date: '2026-01-04', 
+    title: '台北市教育盃', 
+    time: '08:00 - 17:00', 
+    type: 'competition',
+    location: '台北市永春高中'
+  },
 ];
 
 // Helper to categorize championships based on keywords

@@ -4,22 +4,107 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>三玉滾球 Sanyu Pétanque</title>
-    <!-- Static Tailwind CSS v2.2.19 (No eval used) -->
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    
+    <!-- Tailwind CSS v3 Play CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;700;900&family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind Configuration -->
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              'sanyu-red': '#e6004c',
+              'sanyu-black': '#09090b',
+              'sanyu-dark': '#18181b',
+              'sanyu-gray': '#27272a',
+              // Opacity Variants (Mapped to support existing code)
+              'sanyu-red-5': 'rgba(230, 0, 76, 0.05)',
+              'sanyu-red-10': 'rgba(230, 0, 76, 0.1)',
+              'sanyu-red-20': 'rgba(230, 0, 76, 0.2)',
+              'sanyu-red-50': 'rgba(230, 0, 76, 0.5)',
+              'sanyu-red-80': 'rgba(230, 0, 76, 0.8)',
+              'sanyu-black-40': 'rgba(9, 9, 11, 0.4)',
+              'sanyu-black-50': 'rgba(9, 9, 11, 0.5)',
+              'sanyu-black-80': 'rgba(9, 9, 11, 0.8)',
+              'sanyu-black-90': 'rgba(9, 9, 11, 0.9)',
+              'sanyu-black-95': 'rgba(9, 9, 11, 0.95)',
+              'sanyu-dark-50': 'rgba(24, 24, 27, 0.5)',
+              'sanyu-dark-70': 'rgba(24, 24, 27, 0.7)',
+              'sanyu-dark-90': 'rgba(24, 24, 27, 0.9)',
+              'sanyu-dark-95': 'rgba(24, 24, 27, 0.95)',
+              'white-5': 'rgba(255, 255, 255, 0.05)',
+              'white-10': 'rgba(255, 255, 255, 0.1)',
+              'yellow-900-40': 'rgba(113, 63, 18, 0.4)',
+              'yellow-900-50': 'rgba(113, 63, 18, 0.5)',
+            },
+            borderColor: {
+              'sanyu-red': '#e6004c',
+              'sanyu-red-5': 'rgba(230, 0, 76, 0.05)',
+              'sanyu-red-30': 'rgba(230, 0, 76, 0.3)',
+              'sanyu-red-50': 'rgba(230, 0, 76, 0.5)',
+              'white-5': 'rgba(255, 255, 255, 0.05)',
+              'white-50': 'rgba(255, 255, 255, 0.5)',
+              'yellow-700-50': 'rgba(161, 98, 7, 0.5)',
+            },
+            boxShadow: {
+              'neon': '0 0 10px #e6004c',
+              'neon-strong': '0 0 15px #e6004c',
+              'neon-soft': '0 0 20px rgba(230, 0, 76, 0.3)',
+              'neon-glow': '0 0 25px rgba(230, 0, 76, 0.5)',
+              'red-50': '0 10px 15px -3px rgba(230, 0, 76, 0.5)',
+            },
+            dropShadow: {
+              'neon': '0 0 8px rgba(230, 0, 76, 1)',
+            },
+            fontFamily: {
+              sans: ['"Noto Sans"', '"Noto Sans TC"', 'sans-serif'],
+            },
+            spacing: {
+              '1/12': '8.333333%',
+            },
+            minWidth: {
+              '800': '800px',
+            },
+            height: {
+              '2px': '2px',
+            },
+            blur: {
+              '128': '128px',
+              '1px': '1px',
+            },
+            animation: {
+              'fade-in-slide': 'fadeIn 1s ease-out, slideInLeft 1s ease-out',
+            },
+            keyframes: {
+              fadeIn: {
+                '0%': { opacity: '0' },
+                '100%': { opacity: '1' },
+              },
+              slideInLeft: {
+                '0%': { transform: 'translateX(-2rem)', opacity: '0' },
+                '100%': { transform: 'translateX(0)', opacity: '1' },
+              }
+            }
+          }
+        }
+      }
+    </script>
     
     <style>
+      /* Base Styles */
       :root {
         --sanyu-red: #e6004c;
-        --sanyu-black: #09090b;
         --sanyu-dark: #18181b;
-        --sanyu-gray: #27272a;
       }
       
       html { scroll-behavior: smooth; }
-      body { background-color: var(--sanyu-black); color: #ffffff; font-family: 'Noto Sans TC', sans-serif; }
+      body { background-color: #09090b; color: #ffffff; }
       
       /* Global Selection Style */
       ::selection { background-color: var(--sanyu-red); color: white; }
@@ -30,80 +115,7 @@
       ::-webkit-scrollbar-thumb { background: var(--sanyu-red); border-radius: 4px; }
       ::-webkit-scrollbar-thumb:hover { background: #c20040; }
 
-      /* Custom Utilities replacing JIT */
-      .font-sans { font-family: 'Noto Sans TC', sans-serif; }
-      
-      /* Colors */
-      .text-sanyu-red { color: var(--sanyu-red); }
-      .bg-sanyu-red { background-color: var(--sanyu-red); }
-      .bg-sanyu-black { background-color: var(--sanyu-black); }
-      .bg-sanyu-dark { background-color: var(--sanyu-dark); }
-      .bg-sanyu-gray { background-color: var(--sanyu-gray); }
-      .border-sanyu-red { border-color: var(--sanyu-red); }
-      .border-sanyu-gray { border-color: var(--sanyu-gray); }
-      
-      /* Zinc Replacements */
-      .bg-zinc-800 { background-color: #27272a; }
-      .bg-zinc-900 { background-color: #18181b; }
-      .border-zinc-800 { border-color: #27272a; }
-      .hover\:bg-zinc-700:hover { background-color: #3f3f46; }
-
-      /* Color Opacities */
-      .bg-sanyu-red-5 { background-color: rgba(230, 0, 76, 0.05); }
-      .bg-sanyu-red-10 { background-color: rgba(230, 0, 76, 0.1); }
-      .bg-sanyu-red-20 { background-color: rgba(230, 0, 76, 0.2); }
-      .bg-sanyu-red-50 { background-color: rgba(230, 0, 76, 0.5); }
-      .bg-sanyu-red-80 { background-color: rgba(230, 0, 76, 0.8); }
-
-      .bg-sanyu-black-40 { background-color: rgba(9, 9, 11, 0.4); }
-      .bg-sanyu-black-50 { background-color: rgba(9, 9, 11, 0.5); }
-      .bg-sanyu-black-80 { background-color: rgba(9, 9, 11, 0.8); }
-      .bg-sanyu-black-90 { background-color: rgba(9, 9, 11, 0.9); }
-      .bg-sanyu-black-95 { background-color: rgba(9, 9, 11, 0.95); }
-
-      .bg-sanyu-dark-50 { background-color: rgba(24, 24, 27, 0.5); }
-      .bg-sanyu-dark-70 { background-color: rgba(24, 24, 27, 0.7); }
-      .bg-sanyu-dark-90 { background-color: rgba(24, 24, 27, 0.9); }
-      .bg-sanyu-dark-95 { background-color: rgba(24, 24, 27, 0.95); }
-
-      .border-sanyu-red-5 { border-color: rgba(230, 0, 76, 0.05); }
-      .border-sanyu-red-30 { border-color: rgba(230, 0, 76, 0.3); }
-      .border-sanyu-red-50 { border-color: rgba(230, 0, 76, 0.5); }
-      
-      .text-white-10 { color: rgba(255, 255, 255, 0.1); }
-      .border-white-5 { border-color: rgba(255, 255, 255, 0.05); }
-      .border-white-50 { border-color: rgba(255, 255, 255, 0.5); }
-
-      /* Shadows */
-      .shadow-neon { box-shadow: 0 0 10px #e6004c; }
-      .shadow-neon-strong { box-shadow: 0 0 15px #e6004c; }
-      .shadow-neon-soft { box-shadow: 0 0 20px rgba(230, 0, 76, 0.3); }
-      .shadow-neon-glow { box-shadow: 0 0 25px rgba(230, 0, 76, 0.5); }
-      .drop-shadow-neon { filter: drop-shadow(0 0 8px rgba(230, 0, 76, 1)); }
-      .shadow-red-50 { box-shadow: 0 10px 15px -3px rgba(230, 0, 76, 0.5); }
-
-      /* Layout & Interactions */
-      .aspect-square { aspect-ratio: 1 / 1; }
-      .min-w-800 { min-width: 800px; }
-      .backdrop-blur-sm { backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
-      .backdrop-blur-md { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
-      .blur-1px { filter: blur(1px); }
-      
-      .ring-sanyu-red { --tw-ring-color: var(--sanyu-red); }
-      .focus\:ring-sanyu-red:focus { box-shadow: 0 0 0 2px var(--sanyu-red); }
-      .focus\:border-sanyu-red:focus { border-color: var(--sanyu-red); }
-      
-      .hover\:bg-sanyu-red-80:hover { background-color: rgba(230, 0, 76, 0.8); }
-      .hover\:text-sanyu-red:hover { color: var(--sanyu-red); }
-      .hover\:border-sanyu-red-30:hover { border-color: rgba(230, 0, 76, 0.3); }
-      
-      /* Group Hover Replacements */
-      .group:hover .group-hover\:text-sanyu-red { color: var(--sanyu-red); }
-      .group:hover .group-hover\:scale-110 { transform: scale(1.1); }
-      .group:hover .group-hover\:opacity-100 { opacity: 1; }
-      .group:hover .group-hover\:drop-shadow-neon { filter: drop-shadow(0 0 8px rgba(230, 0, 76, 1)); }
-
-      /* Custom Chart Hover Logic (Replacing named groups) */
+      /* Chart Interactions */
       .point-group .point-hover-opacity { opacity: 0; transition: opacity 0.3s; }
       .point-group:hover .point-hover-opacity { opacity: 1; }
       
@@ -112,19 +124,19 @@
       
       .point-group .point-hover-radius { transition: r 0.3s; }
       .point-group:hover .point-hover-radius { r: 6; }
-      
-      /* Specific Yellow Styles */
-      .bg-yellow-900-40 { background-color: rgba(113, 63, 18, 0.4); }
-      .bg-yellow-900-50 { background-color: rgba(113, 63, 18, 0.5); }
-      .border-yellow-700-50 { border-color: rgba(161, 98, 7, 0.5); }
-      .text-yellow-500 { color: #f59e0b; }
 
-      /* Animations */
-      @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-      @keyframes slideInLeft { from { transform: translateX(-2rem); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-      .animate-fade-in-slide { animation: fadeIn 1s ease-out, slideInLeft 1s ease-out; }
-      .animate-pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
-      @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
+      /* Column Highlight on Hover */
+      .column-hover-rect { opacity: 0; transition: opacity 0.2s; }
+      .point-group:hover .column-hover-rect { opacity: 1; }
+
+      .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+      .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+      .custom-scrollbar::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 4px; }
+      .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #52525b; }
+      
+      .glow-text {
+        text-shadow: 0 0 10px rgba(230, 0, 76, 0.7);
+      }
     </style>
   <script type="importmap">
 {

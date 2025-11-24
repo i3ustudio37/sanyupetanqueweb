@@ -1,9 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { differenceInDays, parseISO } from 'date-fns';
 import CalendarSection from './components/CalendarSection';
 import HistorySection from './components/HistorySection';
 import AdminLoginModal from './components/AdminLoginModal';
 import TechBackground from './components/TechBackground';
-import { Menu, X, Facebook, Lock } from 'lucide-react';
+import { Menu, X, Facebook, Lock, MapPin, Calendar } from 'lucide-react';
+import { getEvents } from './services/storage';
+import { CalendarEvent } from './types';
 
 interface NavLinkProps {
   href: string;
@@ -49,7 +52,7 @@ const NavLink: React.FC<NavLinkProps> = ({ href, children, mobile = false, onCli
       </div>
       
       {/* Techy Glow Line Bottom */}
-      <span className="absolute bottom-0 left-0 w-full h-[2px] bg-sanyu-red shadow-neon transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out"></span>
+      <span className="absolute bottom-0 left-0 w-full h-2px bg-sanyu-red shadow-neon transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out"></span>
       
       {/* Text with Glow Effect on Hover */}
       <span className="relative z-10 text-gray-300 group-hover:text-white group-hover:drop-shadow-neon transition-all duration-300">
@@ -296,6 +299,12 @@ const App: React.FC = () => {
   // Global Admin State
   const [isAdmin, setIsAdmin] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
+  
+  // Next Match State
+  const [nextMatch, setNextMatch] = useState<{
+    event: CalendarEvent;
+    daysLeft: number;
+  } | null>(null);
 
   // Hero section reference for mouse tracking
   const heroRef = useRef<HTMLElement>(null);
@@ -305,6 +314,30 @@ const App: React.FC = () => {
       setScrolled(window.scrollY > 50);
     };
     window.addEventListener('scroll', handleScroll);
+    
+    // Calculate Next Match
+    const events = getEvents();
+    const today = new Date();
+    // Reset time part of today for accurate comparison
+    today.setHours(0, 0, 0, 0);
+
+    const upcomingCompetitions = events
+      .filter(e => e.type === 'competition')
+      .map(e => ({
+        ...e,
+        parsedDate: parseISO(e.date)
+      }))
+      .filter(e => e.parsedDate >= today)
+      .sort((a, b) => a.parsedDate.getTime() - b.parsedDate.getTime());
+
+    if (upcomingCompetitions.length > 0) {
+      const match = upcomingCompetitions[0];
+      const days = differenceInDays(match.parsedDate, today);
+      setNextMatch({
+        event: match,
+        daysLeft: days
+      });
+    }
     
     // Add mouse move listener to hero section using ref to avoid re-renders
     const handleHeroMouseMove = (e: MouseEvent) => {
@@ -347,7 +380,7 @@ const App: React.FC = () => {
             <div className="h-14 w-14">
               <SanyuLogo className="w-full h-full" monochrome />
             </div>
-            <span className="font-black text-xl tracking-tighter italic hidden md:block">
+            <span className="font-black text-xl tracking-tighter hidden md:block">
               三玉 <span className="text-white drop-shadow-md">滾球</span>
             </span>
           </div>
@@ -400,36 +433,22 @@ const App: React.FC = () => {
 
         {/* Abstract Background Shapes */}
         <div 
-          className="absolute -bottom-32 -right-32 w-96 h-96 bg-sanyu-red rounded-full opacity-10 animate-pulse pointer-events-none"
-          style={{ filter: 'blur(128px)' }}
+          className="absolute -bottom-32 -right-32 w-96 h-96 bg-sanyu-red rounded-full opacity-10 animate-pulse pointer-events-none blur-128"
         ></div>
 
-        <div className="container mx-auto px-4 relative z-10 grid md:grid-cols-2 gap-8 items-center h-full min-h-screen" style={{ minHeight: 'calc(100vh - 80px)' }}>
+        <div className="container mx-auto px-4 relative z-10 grid md:grid-cols-2 gap-8 items-center h-full" style={{ minHeight: 'calc(100vh - 80px)' }}>
           
-          {/* Left Column: Visuals (Layer 43 & 44) - Moved from Right to Left as per image.png */}
+          {/* Left Column: Visuals (Replaced Images with Logo) */}
           <div className="order-1 md:order-1 relative w-full h-full flex items-center justify-center md:justify-start pointer-events-none md:pointer-events-auto">
-             <div className="relative w-full max-w-lg aspect-square flex items-center justify-center">
-                  
-                  {/* Layer 44 - Secondary, Background, Smaller (50% of 43), Blended */}
-                  <img 
-                    src="/img/midLayer_44.png" 
-                    alt="Player Secondary" 
-                    className="absolute left-[-5%] bottom-10 w-1/2 opacity-60 mix-blend-luminosity blur-1px transition-all duration-700 hover:opacity-80 hover:blur-0 z-[1]" 
+             <div className="relative w-full max-w-lg aspect-square flex items-center justify-center p-8">
+                  <SanyuLogo 
+                    animate 
+                    className="w-full h-full drop-shadow-neon" 
                   />
-                  
-                  {/* Layer 43 - Main, Foreground, Larger */}
-                  <img 
-                    src="/img/midLayer_43.png" 
-                    alt="Player Main" 
-                    className="relative z-10 w-full object-contain drop-shadow-2xl animate-fade-in-slide duration-1000" 
-                  />
-                  
-                  {/* Blending Gradient at bottom to merge with background */}
-                  <div className="absolute bottom-0 left-0 right-0 h-1/4 bg-gradient-to-t from-gray-900 via-gray-900 to-transparent z-20" style={{ '--tw-gradient-from': '#09090b', '--tw-gradient-via': '#09090b' } as React.CSSProperties}></div>
              </div>
           </div>
 
-          {/* Right Column: Text Content - Moved from Left to Right as per image.png */}
+          {/* Right Column: Text Content */}
           <div className="order-2 md:order-2 select-none flex flex-col items-start text-left md:pl-10 relative z-30">
             <div className="inline-block bg-sanyu-red-10 border border-sanyu-red-50 text-sanyu-red text-xl font-bold px-6 py-2 rounded-full mb-8 tracking-widest uppercase shadow-neon-soft hover:scale-105 transition-transform duration-300">
               熱烈招生中
@@ -442,20 +461,48 @@ const App: React.FC = () => {
               <p className="block text-gray-400">我們培養冠軍，磨練心性，追求卓越！</p>
             </div>
             
-            <div className="bg-sanyu-dark-50 border-l-4 border-sanyu-red p-6 rounded-r-lg backdrop-blur-sm mb-8 shadow-lg hover:bg-sanyu-dark-70 transition-colors flex flex-col items-start w-full md:w-auto">
-              <h3 className="text-white font-bold uppercase tracking-wider mb-2 text-sm flex items-center gap-2">
-                <span className="w-2 h-2 bg-sanyu-red rounded-full animate-pulse"></span>
-                練習時間
-              </h3>
-              <p className="text-2xl font-black text-white">週一 • 週二 • 週四</p>
-              <p className="text-sanyu-red font-bold text-lg glow-text">16:00 ~ 17:30</p>
-              <p className="text-gray-500 text-sm mt-2">@ 三玉國小滾球場</p>
+            <div className="flex flex-col md:flex-row gap-6 w-full mb-8">
+              {/* Practice Time Block */}
+              <div className="bg-sanyu-dark-50 border-l-4 border-sanyu-red p-6 rounded-r-lg backdrop-blur-sm shadow-lg hover:bg-sanyu-dark-70 transition-colors flex flex-col items-start flex-1 min-w-[220px]">
+                <h3 className="text-white font-bold uppercase tracking-wider mb-2 text-sm flex items-center gap-2">
+                  <span className="w-2 h-2 bg-sanyu-red rounded-full animate-pulse"></span>
+                  練習時間
+                </h3>
+                <p className="text-2xl font-black text-white">週一 • 週二 • 週四</p>
+                <p className="text-sanyu-red font-bold text-lg glow-text">16:00 ~ 17:30</p>
+                <p className="text-gray-500 text-sm mt-2">@ 三玉國小滾球場</p>
+              </div>
+
+              {/* Next Match Block (Conditional) */}
+              {nextMatch && (
+                <div className="bg-sanyu-dark-50 border-l-4 border-yellow-500 p-6 rounded-r-lg backdrop-blur-sm shadow-lg hover:bg-sanyu-dark-70 transition-colors flex flex-col items-start flex-1 min-w-[220px]">
+                  <h3 className="text-white font-bold uppercase tracking-wider mb-2 text-sm flex items-center gap-2">
+                    <span className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse"></span>
+                    下一場比賽
+                  </h3>
+                  <div className="flex items-baseline gap-2 mb-1">
+                     <span className="text-xs text-gray-400">倒數</span>
+                     <span className="text-5xl font-black text-white tracking-tighter leading-none">{nextMatch.daysLeft}</span>
+                     <span className="text-xs text-gray-400">天</span>
+                  </div>
+                  <p className="text-sanyu-red font-bold text-xl leading-tight mb-2">{nextMatch.event.title}</p>
+                  <div className="flex flex-col gap-1 text-gray-400 text-sm">
+                    <div className="flex items-center gap-1">
+                       <Calendar size={12} />
+                       <span>{nextMatch.event.date}</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                       <MapPin size={12} />
+                       <span>{nextMatch.event.location || '請見詳細資訊'}</span>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
 
             <NavLink href="#calendar">
                <span 
-                 className="inline-flex items-center gap-2 bg-white text-black hover:bg-sanyu-red hover:text-white font-bold py-4 px-8 rounded-full transition-all transform hover:scale-105 shadow-neon-glow cursor-pointer"
-                 style={{ boxShadow: '0 0 20px rgba(255,255,255,0.1)' }}
+                 className="inline-flex items-center gap-2 bg-white text-black hover:bg-sanyu-red hover:text-white hover:shadow-neon-glow font-bold py-4 px-8 rounded-full transition-all transform hover:scale-105 shadow-neon-glow cursor-pointer"
                >
                   查看行事曆
                </span>

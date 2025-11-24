@@ -21,6 +21,7 @@ export interface CalendarEvent {
   title: string;
   description?: string;
   time?: string;
+  location?: string;
   type: 'practice' | 'competition' | 'event';
 }
 

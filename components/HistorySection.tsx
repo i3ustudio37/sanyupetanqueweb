@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { YearRecord, Achievement, CompetitionCategory } from '../types';
 import * as storage from '../services/storage';
-import { Trophy, Edit, Save, Plus, X, Flag } from 'lucide-react';
+import { Trophy, Edit, Save, Plus, X, Flag, Filter, ArrowRight } from 'lucide-react';
 
 interface HistorySectionProps {
   isAdmin: boolean;
@@ -11,36 +11,81 @@ const HistorySection: React.FC<HistorySectionProps> = ({ isAdmin }) => {
   const [records, setRecords] = useState<YearRecord[]>([]);
   const [filter, setFilter] = useState<'All' | CompetitionCategory>('All');
   
+  // Range Filter State
+  const [startYear, setStartYear] = useState<string>('');
+  const [endYear, setEndYear] = useState<string>('');
+  
   // Editing State
   const [editingYearId, setEditingYearId] = useState<string | null>(null);
   const [editForm, setEditForm] = useState<Partial<YearRecord>>({});
 
   useEffect(() => {
-    setRecords(storage.getRecords());
+    const data = storage.getRecords();
+    setRecords(data);
+    
+    // Initialize filter range to cover all years
+    if (data.length > 0) {
+      const years = data.map(r => parseInt(r.academicYear)).sort((a, b) => a - b);
+      setStartYear(years[0].toString());
+      setEndYear(years[years.length - 1].toString());
+    }
   }, []);
+
+  // Helper: Count rankings by splitting strings (e.g., "第一名、第三名" counts as 2)
+  const countRankings = (rankStr: string): number => {
+    if (!rankStr) return 0;
+    // Split by common separators: ideographic comma (、), comma (,), or space
+    return rankStr.split(/[、, ]+/).filter(s => s.trim().length > 0).length;
+  };
+
+  // Extract unique years for the filter dropdown (Descending for UI)
+  const availableYears = useMemo(() => {
+    const years = records.map(r => r.academicYear);
+    return Array.from(new Set(years)).sort((a, b) => parseInt(b) - parseInt(a));
+  }, [records]);
+
+  // Available years sorted Ascending for Range Logic
+  const sortedYearsAsc = useMemo(() => {
+    return [...availableYears].sort((a, b) => parseInt(a) - parseInt(b));
+  }, [availableYears]);
 
   // Prepare Chart Data (Chronological Order with Categorized Counts)
   const chartData = useMemo(() => {
     const sorted = [...records].sort((a, b) => parseInt(a.academicYear) - parseInt(b.academicYear));
-    return sorted.map(r => ({
-      year: r.academicYear,
-      National: r.achievements.filter(a => a.category === 'National').length,
-      Education: r.achievements.filter(a => a.category === 'Education').length,
-      Other: r.achievements.filter(a => a.category === 'Other').length,
-      All: r.achievements.length,
-      // Check for championships
-      isNationalChamp: r.achievements.some(a => a.category === 'National' && a.rank.includes('第一名')),
-      isEduChamp: r.achievements.some(a => a.category === 'Education' && a.rank.includes('第一名'))
-    }));
+    return sorted.map(r => {
+      // Logic update: Count number of ranks instead of number of objects
+      const nationalCount = r.achievements
+        .filter(a => a.category === 'National')
+        .reduce((acc, curr) => acc + countRankings(curr.rank), 0);
+        
+      const educationCount = r.achievements
+        .filter(a => a.category === 'Education')
+        .reduce((acc, curr) => acc + countRankings(curr.rank), 0);
+        
+      const otherCount = r.achievements
+        .filter(a => a.category === 'Other')
+        .reduce((acc, curr) => acc + countRankings(curr.rank), 0);
+
+      return {
+        year: r.academicYear,
+        National: nationalCount,
+        Education: educationCount,
+        Other: otherCount,
+        All: nationalCount + educationCount + otherCount,
+        // Check for championships
+        isNationalChamp: r.achievements.some(a => a.category === 'National' && a.rank.includes('第一名')),
+        isEduChamp: r.achievements.some(a => a.category === 'Education' && a.rank.includes('第一名'))
+      };
+    });
   }, [records]);
 
   // Chart Rendering Logic
   const width = 1000;
   const height = 400;
   const paddingY = 50;
+  const paddingX = 40; // Added horizontal padding inside chart
   
   // Determine which lines to show based on filter
-  // Requirement: Hide Total line if specific filter is applied
   const showTotal = filter === 'All';
   const showNational = filter === 'All' || filter === 'National';
   const showEducation = filter === 'All' || filter === 'Education';
@@ -58,26 +103,52 @@ const HistorySection: React.FC<HistorySectionProps> = ({ isAdmin }) => {
       if (showOther) counts.push(d.Other);
       max = Math.max(max, ...counts);
     });
-    // Add generous buffer to top to prevent markers from clipping, especially when multiple markers stack
-    return Math.max(max + 8, 10); 
+    return Math.max(max + 5, 10); 
   }, [chartData, showTotal, showNational, showEducation, showOther]);
   
   const getX = (index: number) => {
     if (chartData.length <= 1) return width / 2;
-    // Stretch to full width (0 to width)
-    return (index / (chartData.length - 1)) * width;
+    // Stretch to full width with padding
+    const effectiveWidth = width - (paddingX * 2);
+    return paddingX + (index / (chartData.length - 1)) * effectiveWidth;
   };
   
   const getY = (count: number) => {
     return height - paddingY - (count / maxCount) * (height - paddingY * 2);
   };
   
-  // Helper to generate path string
   const createPath = (key: 'National' | 'Education' | 'Other' | 'All') => {
     if (chartData.length === 0) return '';
     return `M ${getX(0)} ${getY(chartData[0][key])} ` + 
       chartData.slice(1).map((d, i) => `L ${getX(i + 1)} ${getY(d[key])}`).join(' ');
   };
+
+  // Calculate Highlight Zone Dimensions
+  const highlightZone = useMemo(() => {
+    if (!startYear || !endYear || chartData.length === 0) return null;
+    
+    // Find indices in the sorted chart data
+    const startIndex = chartData.findIndex(d => d.year === startYear);
+    const endIndex = chartData.findIndex(d => d.year === endYear);
+    
+    // Handle cases where exact year might not be in data (though it comes from data)
+    // Fallback to range logic if specific year missing
+    const sIdx = startIndex >= 0 ? startIndex : 0;
+    const eIdx = endIndex >= 0 ? endIndex : chartData.length - 1;
+
+    // Ensure start < end
+    const firstIdx = Math.min(sIdx, eIdx);
+    const lastIdx = Math.max(sIdx, eIdx);
+
+    const x1 = getX(firstIdx);
+    const x2 = getX(lastIdx);
+    
+    // Add some padding to the width for visual appeal
+    const boxX = Math.max(0, x1 - 20); // 20px left padding
+    const boxWidth = (x2 - x1) + 40;   // 40px total padding
+    
+    return { x: boxX, width: boxWidth };
+  }, [chartData, startYear, endYear]);
 
   const getFilteredAchievements = (achievements: Achievement[]) => {
     if (filter === 'All') return achievements;
@@ -91,7 +162,7 @@ const HistorySection: React.FC<HistorySectionProps> = ({ isAdmin }) => {
 
   const handleEditClick = (record: YearRecord) => {
     setEditingYearId(record.id);
-    setEditForm(JSON.parse(JSON.stringify(record))); // Deep copy
+    setEditForm(JSON.parse(JSON.stringify(record))); 
   };
 
   const handleSave = () => {
@@ -141,7 +212,7 @@ const HistorySection: React.FC<HistorySectionProps> = ({ isAdmin }) => {
       onClick={() => setFilter(type)}
       className={`px-4 py-2 rounded-full text-sm font-bold border transition-all
         ${filter === type 
-          ? 'bg-sanyu-red border-sanyu-red text-white shadow-red-50' 
+          ? 'bg-sanyu-red border-sanyu-red text-white' 
           : 'bg-transparent border-gray-700 text-gray-400 hover:border-gray-500 hover:text-white'
         }`}
     >
@@ -150,7 +221,6 @@ const HistorySection: React.FC<HistorySectionProps> = ({ isAdmin }) => {
   );
 
   return (
-    // Added specific linear gradient stripe pattern for this section
     <section 
       id="history" 
       className="py-20 bg-sanyu-dark-95 relative backdrop-blur-sm border-t border-gray-900"
@@ -160,7 +230,7 @@ const HistorySection: React.FC<HistorySectionProps> = ({ isAdmin }) => {
       }}
     >
       <div className="container mx-auto px-4 relative z-10">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12">
+        <div className="flex flex-col xl:flex-row justify-between items-start xl:items-end mb-12 gap-6">
           <div>
             <h2 className="text-4xl font-black italic uppercase tracking-tighter text-white mb-2">
               球隊大事記 <span className="text-sanyu-red">.</span>
@@ -170,17 +240,59 @@ const HistorySection: React.FC<HistorySectionProps> = ({ isAdmin }) => {
             </p>
           </div>
           
-          <div className="mt-6 md:mt-0 flex flex-wrap gap-2">
-            <FilterButton type="All" label="全部" />
-            <FilterButton type="National" label="全國賽" />
-            <FilterButton type="Education" label="教育盃" />
-            <FilterButton type="Other" label="其他盃賽" />
+          <div className="flex flex-col md:flex-row items-start md:items-center gap-4 w-full xl:w-auto">
+             {/* Category Filter */}
+            <div className="flex flex-wrap gap-2">
+              <FilterButton type="All" label="全部" />
+              <FilterButton type="National" label="全國賽" />
+              <FilterButton type="Education" label="教育盃" />
+              <FilterButton type="Other" label="其他盃賽" />
+            </div>
+
+            {/* Year Range Filter */}
+            <div className="flex items-center gap-2 bg-black border border-gray-700 rounded-full px-4 py-1.5 w-full md:w-auto justify-between md:justify-start">
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-gray-500 font-bold uppercase hidden md:inline">年份範圍</span>
+                <Filter size={14} className="text-sanyu-red md:hidden" />
+              </div>
+              
+              <div className="flex items-center gap-2">
+                <select 
+                  value={startYear}
+                  onChange={(e) => {
+                     // Ensure start doesn't exceed end
+                     const val = e.target.value;
+                     if (parseInt(val) > parseInt(endYear)) setEndYear(val);
+                     setStartYear(val);
+                  }}
+                  className="bg-transparent text-sm text-white font-bold focus:outline-none cursor-pointer appearance-none text-right hover:text-sanyu-red transition-colors"
+                >
+                  {sortedYearsAsc.map(year => (
+                    <option key={`start-${year}`} value={year} className="bg-sanyu-dark">{year}</option>
+                  ))}
+                </select>
+                <ArrowRight size={12} className="text-gray-600" />
+                <select 
+                  value={endYear}
+                  onChange={(e) => {
+                     // Ensure end doesn't precede start
+                     const val = e.target.value;
+                     if (parseInt(val) < parseInt(startYear)) setStartYear(val);
+                     setEndYear(val);
+                  }}
+                  className="bg-transparent text-sm text-white font-bold focus:outline-none cursor-pointer appearance-none hover:text-sanyu-red transition-colors"
+                >
+                  {sortedYearsAsc.map(year => (
+                    <option key={`end-${year}`} value={year} className="bg-sanyu-dark">{year}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
           </div>
         </div>
 
         {/* Tech Chart Section */}
         <div className="mb-16 bg-sanyu-black-50 backdrop-blur-md border border-gray-800 rounded-xl p-6 relative group">
-          <div className="absolute inset-0 bg-sanyu-red-5 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"></div>
           <div className="flex justify-between items-center mb-6">
             <h3 className="text-sm font-bold text-gray-500 uppercase tracking-widest flex items-center gap-2">
               <span className="w-1 h-4 bg-sanyu-red"></span>
@@ -195,7 +307,7 @@ const HistorySection: React.FC<HistorySectionProps> = ({ isAdmin }) => {
             </div>
           </div>
           
-          <div className="w-full overflow-x-auto">
+          <div className="w-full overflow-x-auto custom-scrollbar pb-2">
             <div className="min-w-800 h-64 md:h-80 relative">
               {chartData.length > 0 && (
                 <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-full overflow-visible">
@@ -208,8 +320,39 @@ const HistorySection: React.FC<HistorySectionProps> = ({ isAdmin }) => {
                       <stop offset="0%" stopColor="#e6004c" />
                       <stop offset="100%" stopColor="#ff4d88" />
                     </linearGradient>
+                    <pattern id="diagonalHatch" width="10" height="10" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
+                      <line x1="0" y1="0" x2="0" y2="10" style={{stroke:'rgba(255,255,255,0.1)', strokeWidth:1}} />
+                    </pattern>
                   </defs>
                   
+                  {/* Highlight Zone */}
+                  {highlightZone && (
+                     <g>
+                        <rect 
+                           x={highlightZone.x} 
+                           y={paddingY} 
+                           width={highlightZone.width} 
+                           height={height - paddingY * 2} 
+                           fill="url(#diagonalHatch)" 
+                           className="opacity-50"
+                        />
+                        <rect 
+                           x={highlightZone.x} 
+                           y={paddingY} 
+                           width={highlightZone.width} 
+                           height={height - paddingY * 2} 
+                           fill="rgba(230, 0, 76, 0.03)" 
+                           stroke="rgba(230, 0, 76, 0.2)"
+                           strokeWidth="1"
+                           strokeDasharray="4 4"
+                        />
+                        {/* Range Labels on top of chart */}
+                        <text x={highlightZone.x + highlightZone.width/2} y={paddingY - 10} textAnchor="middle" fill="#e6004c" fontSize="12" fontWeight="bold">
+                           篩選範圍
+                        </text>
+                     </g>
+                  )}
+
                   {/* Grid Lines */}
                   {[0, 0.25, 0.5, 0.75, 1].map((tick) => {
                     const y = height - paddingY - (tick * (height - paddingY * 2));
@@ -294,7 +437,6 @@ const HistorySection: React.FC<HistorySectionProps> = ({ isAdmin }) => {
                     
                     // Markers Logic: Strict filtering
                     const markers = [];
-                    // Only show National marker if National filter is active (or All)
                     if ((filter === 'All' || filter === 'Education') && d.isEduChamp) {
                         markers.push({ type: 'Edu', color: '#eab308' });
                     }
@@ -317,12 +459,23 @@ const HistorySection: React.FC<HistorySectionProps> = ({ isAdmin }) => {
                     const rectX = -(tooltipWidth / 2) + tooltipX;
 
                     // Smart vertical positioning
-                    // If the point is very high (small y value), flip tooltip below the point
                     const isHighPoint = y < 150; 
                     const tooltipYOffset = isHighPoint ? 20 : -160; 
 
                     return (
                       <g key={d.year} className="point-group cursor-pointer">
+                         {/* Column Hover Highlight */}
+                         <rect 
+                            x={x - 20} 
+                            y={paddingY} 
+                            width={40} 
+                            height={height - paddingY * 2} 
+                            fill="#e6004c" 
+                            className="column-hover-rect" 
+                            style={{ opacity: 0 }}
+                            fillOpacity="0.05"
+                         />
+
                          {/* X-Axis Label */}
                          <text x={x} y={height - paddingY + 25} textAnchor="middle" fill="#888" fontSize="14" className="point-hover-fill transition-colors cursor-default">
                           {d.year}
@@ -340,9 +493,9 @@ const HistorySection: React.FC<HistorySectionProps> = ({ isAdmin }) => {
                             <circle r="4" fill="#18181b" stroke={showTotal ? "#e6004c" : "#888"} strokeWidth="2" className="point-hover-radius transition-all" />
                         </g>
                         
-                        {/* Special Markers (Strict Filtered) */}
+                        {/* Special Markers */}
                         {markers.map((m, idx) => {
-                           const markerY = y - 20 - (idx * 25); // Stack upwards
+                           const markerY = y - 20 - (idx * 25);
                            return (
                               <g key={m.type} transform={`translate(${x}, ${markerY})`}>
                                  {m.type === 'Edu' && (
@@ -380,13 +533,13 @@ const HistorySection: React.FC<HistorySectionProps> = ({ isAdmin }) => {
                                     
                                     {/* Vertical List */}
                                     <text x={-50} y={65} textAnchor="start" fill="#e6004c" fontSize="14" fontWeight="bold">
-                                            全國賽：<tspan fill="#fff">{d.National}</tspan>
+                                            全國賽：<tspan fill="#fff">{d.National} 座</tspan>
                                     </text>
                                     <text x={-50} y={90} textAnchor="start" fill="#eab308" fontSize="14" fontWeight="bold">
-                                            教育盃：<tspan fill="#fff">{d.Education}</tspan>
+                                            教育盃：<tspan fill="#fff">{d.Education} 座</tspan>
                                     </text>
                                     <text x={-50} y={115} textAnchor="start" fill="#71717a" fontSize="14" fontWeight="bold">
-                                            其他：<tspan fill="#fff">{d.Other}</tspan>
+                                            其他：<tspan fill="#fff">{d.Other} 座</tspan>
                                     </text>
                                </g>
                            </g>
@@ -402,7 +555,15 @@ const HistorySection: React.FC<HistorySectionProps> = ({ isAdmin }) => {
 
         <div className="space-y-12">
           {records.map((record) => {
+            // Range Filtering (Inclusive)
+            const year = parseInt(record.academicYear);
+            const start = parseInt(startYear);
+            const end = parseInt(endYear);
+            
+            // If year is out of range, don't show, unless editing
             const isEditing = editingYearId === record.id;
+            if (!isEditing && (year < start || year > end)) return null;
+
             const achievementsToShow = isEditing 
               ? (editForm.achievements || []) 
               : sortAchievements(getFilteredAchievements(record.achievements));
@@ -410,9 +571,9 @@ const HistorySection: React.FC<HistorySectionProps> = ({ isAdmin }) => {
             if (!isEditing && filter !== 'All' && achievementsToShow.length === 0) return null;
 
             return (
-              <div key={record.id} className="relative pl-8 md:pl-0">
+              <div key={record.id} className="relative pl-8 md:pl-0 animate-fade-in-slide">
                 {/* Timeline Line (Desktop) */}
-                <div className="hidden md:block absolute left-[8.33%] top-0 bottom-0 w-px bg-gray-800"></div>
+                <div className="hidden md:block absolute left-1/12 top-0 bottom-0 w-px bg-gray-800"></div>
                 
                 <div className="grid md:grid-cols-12 gap-8">
                   {/* Year Column */}
@@ -479,7 +640,7 @@ const HistorySection: React.FC<HistorySectionProps> = ({ isAdmin }) => {
                                   className="w-24 bg-transparent border-b border-gray-700 text-sm" 
                                   value={ach.rank} 
                                   onChange={(e) => handleAchievementChange(idx, 'rank', e.target.value)}
-                                  placeholder="名次"
+                                  placeholder="名次 (例: 第一名、第三名)"
                                 />
                                 <select 
                                   className="bg-black border border-gray-700 text-xs rounded"

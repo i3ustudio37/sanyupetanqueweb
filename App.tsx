@@ -269,13 +269,13 @@ const SpotlightTitle = () => {
       } as React.CSSProperties}
     >
       {/* Base Text (Darker/Dimmed) - Updated color to #c2144e as requested */}
-      <h1 className="text-5xl md:text-7xl font-black italic uppercase leading-[1.6] py-4 pr-4" style={{ color: '#c2144e' }}>
+      <h1 className="text-5xl md:text-7xl font-black italic uppercase leading-relaxed py-4 pr-4" style={{ color: '#c2144e' }}>
         精準<br />策略<br />勝利
       </h1>
       
       {/* Spotlight Reveal Layer - absolute inset-0 to match perfectly */}
       <h1 
-        className="text-5xl md:text-7xl font-black italic uppercase leading-[1.6] absolute inset-0 text-transparent bg-clip-text pointer-events-none py-4 pr-4"
+        className="text-5xl md:text-7xl font-black italic uppercase leading-relaxed absolute inset-0 text-transparent bg-clip-text pointer-events-none py-4 pr-4"
         style={{
           // Updated to 500px radius and new stops as requested
           backgroundImage: 'radial-gradient(circle 500px at var(--x) var(--y), #ffffff 0%, #e6004c 20%, transparent 100%)',
@@ -414,7 +414,7 @@ const App: React.FC = () => {
                   <img 
                     src="/img/midLayer_44.png" 
                     alt="Player Secondary" 
-                    className="absolute left-[-5%] bottom-10 w-half opacity-60 mix-blend-luminosity blur-[1px] transition-all duration-700 hover:opacity-80 hover:blur-0 z-[1]" 
+                    className="absolute left-[-5%] bottom-10 w-1/2 opacity-60 mix-blend-luminosity blur-1px transition-all duration-700 hover:opacity-80 hover:blur-0 z-[1]" 
                   />
                   
                   {/* Layer 43 - Main, Foreground, Larger */}

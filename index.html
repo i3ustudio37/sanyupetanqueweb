@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>三玉滾球 Sanyu Pétanque</title>
-    <!-- Replaced Play CDN with Static Tailwind v2 to avoid 'unsafe-eval' CSP errors -->
+    <!-- Static Tailwind CSS v2.2.19 (No eval used) -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -42,7 +42,7 @@
       .border-sanyu-red { border-color: var(--sanyu-red); }
       .border-sanyu-gray { border-color: var(--sanyu-gray); }
       
-      /* Zinc (Replacements for Tailwind v3 colors in v2) */
+      /* Zinc Replacements */
       .bg-zinc-800 { background-color: #27272a; }
       .bg-zinc-900 { background-color: #18181b; }
       .border-zinc-800 { border-color: #27272a; }
@@ -87,10 +87,12 @@
       .min-w-800 { min-width: 800px; }
       .backdrop-blur-sm { backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
       .backdrop-blur-md { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+      .blur-1px { filter: blur(1px); }
       
       .ring-sanyu-red { --tw-ring-color: var(--sanyu-red); }
-      .focus\:ring-sanyu-red:focus { --tw-ring-color: var(--sanyu-red); }
+      .focus\:ring-sanyu-red:focus { box-shadow: 0 0 0 2px var(--sanyu-red); }
       .focus\:border-sanyu-red:focus { border-color: var(--sanyu-red); }
+      
       .hover\:bg-sanyu-red-80:hover { background-color: rgba(230, 0, 76, 0.8); }
       .hover\:text-sanyu-red:hover { color: var(--sanyu-red); }
       .hover\:border-sanyu-red-30:hover { border-color: rgba(230, 0, 76, 0.3); }
@@ -138,6 +140,7 @@
 </script>
 </head>
   <body>
+    
     <div id="root"></div>
     <script type="module" src="/index.tsx"></script>
   </body>

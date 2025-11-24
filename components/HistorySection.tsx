@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useMemo } from 'react';
 import { YearRecord, Achievement, CompetitionCategory } from '../types';
 import * as storage from '../services/storage';
@@ -142,7 +141,7 @@ const HistorySection: React.FC<HistorySectionProps> = ({ isAdmin }) => {
       onClick={() => setFilter(type)}
       className={`px-4 py-2 rounded-full text-sm font-bold border transition-all
         ${filter === type 
-          ? 'bg-sanyu-red border-sanyu-red text-white shadow-lg shadow-sanyu-red/50' 
+          ? 'bg-sanyu-red border-sanyu-red text-white shadow-red-50' 
           : 'bg-transparent border-gray-700 text-gray-400 hover:border-gray-500 hover:text-white'
         }`}
     >
@@ -154,7 +153,7 @@ const HistorySection: React.FC<HistorySectionProps> = ({ isAdmin }) => {
     // Added specific linear gradient stripe pattern for this section
     <section 
       id="history" 
-      className="py-20 bg-sanyu-dark/95 relative backdrop-blur-sm border-t border-gray-900"
+      className="py-20 bg-sanyu-dark-95 relative backdrop-blur-sm border-t border-gray-900"
       style={{
         backgroundImage: `linear-gradient(45deg, rgba(255, 255, 255, 0.02) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.02) 50%, rgba(255, 255, 255, 0.02) 75%, transparent 75%, transparent)`,
         backgroundSize: '40px 40px'
@@ -180,8 +179,8 @@ const HistorySection: React.FC<HistorySectionProps> = ({ isAdmin }) => {
         </div>
 
         {/* Tech Chart Section */}
-        <div className="mb-16 bg-black/60 backdrop-blur-md border border-gray-800 rounded-xl p-6 relative group">
-          <div className="absolute inset-0 bg-sanyu-red/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"></div>
+        <div className="mb-16 bg-sanyu-black-50 backdrop-blur-md border border-gray-800 rounded-xl p-6 relative group">
+          <div className="absolute inset-0 bg-sanyu-red-5 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"></div>
           <div className="flex justify-between items-center mb-6">
             <h3 className="text-sm font-bold text-gray-500 uppercase tracking-widest flex items-center gap-2">
               <span className="w-1 h-4 bg-sanyu-red"></span>
@@ -189,15 +188,15 @@ const HistorySection: React.FC<HistorySectionProps> = ({ isAdmin }) => {
             </h3>
             {/* Chart Legend */}
             <div className="flex gap-4 text-xs font-bold flex-wrap">
-              {showTotal && <div className="flex items-center gap-1"><span className="w-3 h-3 rounded-full bg-sanyu-red border border-white/50"></span> 總獎項</div>}
-              {showNational && <div className="flex items-center gap-1"><span className="w-3 h-3 rounded-full bg-[#e6004c]"></span> 全國賽</div>}
-              {showEducation && <div className="flex items-center gap-1"><span className="w-3 h-3 rounded-full bg-[#eab308]"></span> 教育盃</div>}
-              {showOther && <div className="flex items-center gap-1"><span className="w-3 h-3 rounded-full bg-[#71717a]"></span> 其他</div>}
+              {showTotal && <div className="flex items-center gap-1"><span className="w-3 h-3 rounded-full bg-sanyu-red border border-white-50"></span> 總獎項</div>}
+              {showNational && <div className="flex items-center gap-1"><span className="w-3 h-3 rounded-full bg-sanyu-red"></span> 全國賽</div>}
+              {showEducation && <div className="flex items-center gap-1"><span className="w-3 h-3 rounded-full bg-yellow-500"></span> 教育盃</div>}
+              {showOther && <div className="flex items-center gap-1"><span className="w-3 h-3 rounded-full bg-gray-500"></span> 其他</div>}
             </div>
           </div>
           
           <div className="w-full overflow-x-auto">
-            <div className="min-w-[800px] h-64 md:h-80 relative">
+            <div className="min-w-800 h-64 md:h-80 relative">
               {chartData.length > 0 && (
                 <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-full overflow-visible">
                   <defs>
@@ -277,7 +276,7 @@ const HistorySection: React.FC<HistorySectionProps> = ({ isAdmin }) => {
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       filter="url(#glow)"
-                      className="drop-shadow-[0_0_8px_rgba(230,0,76,0.5)]"
+                      className="drop-shadow-neon"
                     />
                   )}
 
@@ -419,7 +418,7 @@ const HistorySection: React.FC<HistorySectionProps> = ({ isAdmin }) => {
                   {/* Year Column */}
                   <div className="md:col-span-2 md:text-right relative">
                     <div className="md:sticky md:top-24">
-                      <h3 className="text-5xl font-black text-white/10 absolute -top-4 right-0 md:right-4 z-0 pointer-events-none select-none">
+                      <h3 className="text-5xl font-black text-white-10 absolute -top-4 right-0 md:right-4 z-0 pointer-events-none select-none">
                         {record.academicYear}
                       </h3>
                       <h3 className="text-3xl font-black text-sanyu-red relative z-10">
@@ -437,7 +436,7 @@ const HistorySection: React.FC<HistorySectionProps> = ({ isAdmin }) => {
                   </div>
 
                   {/* Content Column */}
-                  <div className="md:col-span-10 bg-black/40 border border-white/5 rounded-2xl p-6 md:p-8 hover:border-sanyu-red/30 transition-colors backdrop-blur-sm">
+                  <div className="md:col-span-10 bg-sanyu-black-40 border border-white-5 rounded-2xl p-6 md:p-8 hover:border-sanyu-red-30 transition-colors backdrop-blur-sm">
                     {isEditing ? (
                       /* Edit Mode Form */
                       <div className="space-y-4">
@@ -527,24 +526,24 @@ const HistorySection: React.FC<HistorySectionProps> = ({ isAdmin }) => {
                               className={`
                                 p-4 rounded-lg border flex flex-col justify-between h-full transition-transform hover:-translate-y-1
                                 ${ach.category === 'National' 
-                                  ? 'bg-gradient-to-br from-sanyu-red/20 to-black border-sanyu-red/50' 
+                                  ? 'bg-gradient-to-br from-red-900 to-black border-sanyu-red-50' 
                                   : ach.category === 'Education' 
-                                    ? 'bg-gradient-to-br from-yellow-900/20 to-black border-yellow-700/50' 
+                                    ? 'bg-gradient-to-br from-yellow-900 to-black border-yellow-700-50' 
                                     : 'bg-zinc-900 border-zinc-800'}
                               `}
                             >
                               <div className="mb-3">
                                 <span className={`
                                   text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider
-                                  ${ach.category === 'National' ? 'bg-sanyu-red/50 text-white' 
-                                    : ach.category === 'Education' ? 'bg-yellow-900/50 text-yellow-500' 
+                                  ${ach.category === 'National' ? 'bg-sanyu-red-50 text-white' 
+                                    : ach.category === 'Education' ? 'bg-yellow-900-50 text-yellow-500' 
                                     : 'bg-gray-800 text-gray-400'}
                                 `}>
                                   {ach.category === 'National' ? '全國賽' : ach.category === 'Education' ? '教育盃' : '其他'}
                                 </span>
                                 <h4 className="text-white font-bold mt-2 leading-tight">{ach.title}</h4>
                               </div>
-                              <div className="flex items-center gap-2 text-sm font-semibold text-gray-300 border-t border-white/5 pt-2">
+                              <div className="flex items-center gap-2 text-sm font-semibold text-gray-300 border-t border-white-5 pt-2">
                                 <Trophy size={14} className={ach.category === 'National' ? 'text-yellow-500' : 'text-gray-500'} />
                                 <span>{ach.rank}</span>
                               </div>

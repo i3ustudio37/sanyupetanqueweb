@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, addMonths, subMonths, isToday } from 'date-fns';
 import { zhTW } from 'date-fns/locale';
@@ -72,14 +71,14 @@ const CalendarSection: React.FC<CalendarSectionProps> = ({ isAdmin }) => {
     // Added specific dot grid pattern overlay
     <section 
       id="calendar" 
-      className="py-20 relative overflow-hidden bg-gradient-to-b from-sanyu-black/90 to-sanyu-dark/95 backdrop-blur-sm"
+      className="py-20 relative overflow-hidden bg-gradient-to-b from-gray-900 to-black backdrop-blur-sm"
       style={{
         backgroundImage: `radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px)`,
         backgroundSize: '24px 24px'
       }}
     >
       {/* Decorative BG */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-sanyu-red/5 rounded-full blur-3xl pointer-events-none"></div>
+      <div className="absolute top-0 right-0 w-96 h-96 bg-sanyu-red-5 rounded-full blur-3xl pointer-events-none"></div>
 
       <div className="container mx-auto px-4 relative z-10">
         <div className="flex flex-col md:flex-row justify-between items-end mb-10 border-b border-gray-800 pb-4">
@@ -93,7 +92,7 @@ const CalendarSection: React.FC<CalendarSectionProps> = ({ isAdmin }) => {
 
         <div className="grid md:grid-cols-12 gap-8">
           {/* Calendar Grid */}
-          <div className="md:col-span-7 lg:col-span-8 bg-sanyu-dark/90 p-6 rounded-2xl border border-gray-800 shadow-xl backdrop-blur-sm">
+          <div className="md:col-span-7 lg:col-span-8 bg-sanyu-dark-90 p-6 rounded-2xl border border-gray-800 shadow-xl backdrop-blur-sm">
             <div className="flex justify-between items-center mb-6">
               <h3 className="text-2xl font-bold text-white">
                 {format(currentDate, 'yyyy年 MMMM', { locale: zhTW })}
@@ -133,12 +132,12 @@ const CalendarSection: React.FC<CalendarSectionProps> = ({ isAdmin }) => {
                     className={`
                       aspect-square rounded-xl flex flex-col items-center justify-start pt-2 relative transition-all group
                       ${!isCurrentMonth ? 'opacity-30' : 'opacity-100'}
-                      ${isSelected ? 'bg-sanyu-red text-white ring-2 ring-sanyu-red ring-offset-2 ring-offset-sanyu-dark' : 'bg-black/40 hover:bg-gray-800 text-gray-300'}
+                      ${isSelected ? 'bg-sanyu-red text-white ring-2 ring-sanyu-red ring-offset-2 ring-offset-gray-900' : 'bg-sanyu-black-40 hover:bg-gray-800 text-gray-300'}
                       ${isTodayDate && !isSelected ? 'border border-sanyu-red text-sanyu-red' : ''}
                     `}
                   >
                     <span className={`text-sm font-bold ${isSelected ? 'text-white' : ''}`}>{format(day, 'd')}</span>
-                    <div className="flex gap-1 mt-1 flex-wrap justify-center max-w-[80%]">
+                    <div className="flex gap-1 mt-1 flex-wrap justify-center" style={{ maxWidth: '80%' }}>
                       {dayEvents.map((ev, idx) => (
                         <div 
                           key={idx} 
@@ -154,7 +153,7 @@ const CalendarSection: React.FC<CalendarSectionProps> = ({ isAdmin }) => {
 
           {/* Details Panel - Updated to Dark Theme */}
           <div className="md:col-span-5 lg:col-span-4 flex flex-col h-full">
-            <div className="bg-[#18181b]/90 backdrop-blur-sm text-gray-200 p-6 rounded-2xl shadow-xl h-full border border-gray-700">
+            <div className="bg-sanyu-dark-90 backdrop-blur-sm text-gray-200 p-6 rounded-2xl shadow-xl h-full border border-gray-700">
               <h3 className="text-xl font-bold mb-4 flex items-center gap-2 border-b border-gray-700 pb-4 text-white">
                 <CalendarIcon className="text-sanyu-red" size={20} />
                 {selectedDate ? format(selectedDate, 'PPP', { locale: zhTW }) : '請選擇日期'}
@@ -174,7 +173,7 @@ const CalendarSection: React.FC<CalendarSectionProps> = ({ isAdmin }) => {
                             </div>
                           )}
                           <span className={`text-xs px-2 py-0.5 rounded-full mt-2 inline-block font-semibold 
-                            ${ev.type === 'competition' ? 'bg-yellow-900/40 text-yellow-500 border border-yellow-700/50' : 'bg-gray-700 text-gray-300'}`}>
+                            ${ev.type === 'competition' ? 'bg-yellow-900-40 text-yellow-500 border border-yellow-700-50' : 'bg-gray-700 text-gray-300'}`}>
                             {ev.type === 'competition' ? '比賽' : ev.type === 'practice' ? '練習' : '活動'}
                           </span>
                         </div>
@@ -206,7 +205,7 @@ const CalendarSection: React.FC<CalendarSectionProps> = ({ isAdmin }) => {
                       placeholder="行程標題" 
                       value={newEventTitle}
                       onChange={e => setNewEventTitle(e.target.value)}
-                      className="w-full bg-black/50 border border-gray-700 rounded px-3 py-2 text-sm text-white focus:ring-2 focus:ring-sanyu-red focus:outline-none"
+                      className="w-full bg-sanyu-black-50 border border-gray-700 rounded px-3 py-2 text-sm text-white focus:ring-2 focus:ring-sanyu-red focus:outline-none"
                       required
                     />
                     <div className="flex gap-2">
@@ -215,12 +214,12 @@ const CalendarSection: React.FC<CalendarSectionProps> = ({ isAdmin }) => {
                         placeholder="時間 (例: 16:00)" 
                         value={newEventTime}
                         onChange={e => setNewEventTime(e.target.value)}
-                        className="w-1/2 bg-black/50 border border-gray-700 rounded px-3 py-2 text-sm text-white focus:ring-2 focus:ring-sanyu-red focus:outline-none"
+                        className="w-1/2 bg-sanyu-black-50 border border-gray-700 rounded px-3 py-2 text-sm text-white focus:ring-2 focus:ring-sanyu-red focus:outline-none"
                       />
                       <select 
                         value={newEventType}
                         onChange={e => setNewEventType(e.target.value as any)}
-                        className="w-1/2 bg-black/50 border border-gray-700 rounded px-3 py-2 text-sm text-white focus:ring-2 focus:ring-sanyu-red focus:outline-none"
+                        className="w-1/2 bg-sanyu-black-50 border border-gray-700 rounded px-3 py-2 text-sm text-white focus:ring-2 focus:ring-sanyu-red focus:outline-none"
                       >
                         <option value="practice">練習</option>
                         <option value="competition">比賽</option>

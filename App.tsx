@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import CalendarSection from './components/CalendarSection';
 import HistorySection from './components/HistorySection';
@@ -46,14 +45,14 @@ const NavLink: React.FC<NavLinkProps> = ({ href, children, mobile = false, onCli
       {/* Background Wrapper */}
       <div className="absolute inset-0 -z-10 rounded-sm">
          {/* Techy Skewed Background */}
-        <span className="absolute inset-0 bg-sanyu-red/10 transform -skew-x-12 -translate-x-full group-hover:translate-x-0 opacity-0 group-hover:opacity-100 transition-all duration-300 ease-out origin-left border-l-2 border-sanyu-red/50"></span>
+        <span className="absolute inset-0 bg-sanyu-red-10 transform -skew-x-12 -translate-x-full group-hover:translate-x-0 opacity-0 group-hover:opacity-100 transition-all duration-300 ease-out origin-left border-l-2 border-sanyu-red-50"></span>
       </div>
       
       {/* Techy Glow Line Bottom */}
-      <span className="absolute bottom-0 left-0 w-full h-[2px] bg-sanyu-red shadow-[0_0_10px_#e6004c] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out"></span>
+      <span className="absolute bottom-0 left-0 w-full h-[2px] bg-sanyu-red shadow-neon transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out"></span>
       
       {/* Text with Glow Effect on Hover */}
-      <span className="relative z-10 text-gray-300 group-hover:text-white group-hover:drop-shadow-[0_0_8px_rgba(230,0,76,1)] transition-all duration-300">
+      <span className="relative z-10 text-gray-300 group-hover:text-white group-hover:drop-shadow-neon transition-all duration-300">
         {children}
       </span>
       
@@ -341,7 +340,7 @@ const App: React.FC = () => {
       <TechBackground />
 
       {/* Navigation */}
-      <nav className={`fixed top-0 w-full z-50 transition-all duration-300 border-b ${scrolled ? 'bg-sanyu-black/95 backdrop-blur-sm border-gray-800 py-2' : 'bg-transparent border-transparent py-6'}`}>
+      <nav className={`fixed top-0 w-full z-50 transition-all duration-300 border-b ${scrolled ? 'bg-sanyu-black-95 backdrop-blur-sm border-gray-800 py-2' : 'bg-transparent border-transparent py-6'}`}>
         <div className="container mx-auto px-4 flex justify-between items-center">
           <div className="flex items-center gap-3">
             {/* Enlarged Logo in Nav */}
@@ -362,7 +361,7 @@ const App: React.FC = () => {
               href="https://www.facebook.com" 
               target="_blank" 
               rel="noreferrer" 
-              className="ml-4 bg-white/10 text-white p-2 rounded-full hover:bg-sanyu-red hover:shadow-[0_0_15px_#e6004c] transition-all duration-300 group"
+              className="ml-4 bg-white bg-opacity-10 text-white p-2 rounded-full hover:bg-sanyu-red hover:shadow-neon-strong transition-all duration-300 group"
             >
               <Facebook size={18} className="group-hover:scale-110 transition-transform" />
             </a>
@@ -406,30 +405,30 @@ const App: React.FC = () => {
           
           {/* Left Column: Visuals (Layer 43 & 44) - Moved from Right to Left as per image.png */}
           <div className="order-1 md:order-1 relative w-full h-full flex items-center justify-center md:justify-start pointer-events-none md:pointer-events-auto">
-             <div className="relative w-full max-w-lg aspect-[3/4] md:aspect-square flex items-center justify-center">
+             <div className="relative w-full max-w-lg aspect-square flex items-center justify-center">
                   
                   {/* Layer 44 - Secondary, Background, Smaller (50% of 43), Blended */}
                   <img 
-                    src="img/midLayer_44.png" 
+                    src="/img/midLayer_44.png" 
                     alt="Player Secondary" 
-                    className="absolute left-[-5%] bottom-10 w-[50%] opacity-60 mix-blend-luminosity blur-[1px] transition-all duration-700 hover:opacity-80 hover:blur-0 z-[1]" 
+                    className="absolute left-[-5%] bottom-10 w-half opacity-60 mix-blend-luminosity blur-[1px] transition-all duration-700 hover:opacity-80 hover:blur-0 z-[1]" 
                   />
                   
                   {/* Layer 43 - Main, Foreground, Larger */}
                   <img 
-                    src="img/midLayer_43.png" 
+                    src="/img/midLayer_43.png" 
                     alt="Player Main" 
-                    className="relative z-10 w-full object-contain drop-shadow-2xl animate-in fade-in slide-in-from-left-8 duration-1000" 
+                    className="relative z-10 w-full object-contain drop-shadow-2xl animate-fade-in-slide duration-1000" 
                   />
                   
                   {/* Blending Gradient at bottom to merge with background */}
-                  <div className="absolute bottom-0 left-0 right-0 h-1/4 bg-gradient-to-t from-sanyu-black via-sanyu-black/80 to-transparent z-20"></div>
+                  <div className="absolute bottom-0 left-0 right-0 h-1/4 bg-gradient-to-t from-gray-900 via-gray-900 to-transparent z-20" style={{ '--tw-gradient-from': '#09090b', '--tw-gradient-via': '#09090b' } as React.CSSProperties}></div>
              </div>
           </div>
 
           {/* Right Column: Text Content - Moved from Left to Right as per image.png */}
           <div className="order-2 md:order-2 select-none flex flex-col items-start text-left md:pl-10 relative z-30">
-            <div className="inline-block bg-sanyu-red/10 border border-sanyu-red/50 text-sanyu-red text-xl font-bold px-6 py-2 rounded-full mb-8 tracking-widest uppercase shadow-[0_0_20px_rgba(230,0,76,0.3)] hover:scale-105 transition-transform duration-300">
+            <div className="inline-block bg-sanyu-red-10 border border-sanyu-red-50 text-sanyu-red text-xl font-bold px-6 py-2 rounded-full mb-8 tracking-widest uppercase shadow-neon-soft hover:scale-105 transition-transform duration-300">
               熱烈招生中
             </div>
             
@@ -440,7 +439,7 @@ const App: React.FC = () => {
               <p className="block text-gray-400">我們培養冠軍，磨練心性，追求卓越！</p>
             </div>
             
-            <div className="bg-sanyu-dark/50 border-l-4 border-sanyu-red p-6 rounded-r-lg backdrop-blur-sm mb-8 shadow-lg hover:bg-sanyu-dark/70 transition-colors flex flex-col items-start w-full md:w-auto">
+            <div className="bg-sanyu-dark-50 border-l-4 border-sanyu-red p-6 rounded-r-lg backdrop-blur-sm mb-8 shadow-lg hover:bg-sanyu-dark-70 transition-colors flex flex-col items-start w-full md:w-auto">
               <h3 className="text-white font-bold uppercase tracking-wider mb-2 text-sm flex items-center gap-2">
                 <span className="w-2 h-2 bg-sanyu-red rounded-full animate-pulse"></span>
                 練習時間
@@ -451,7 +450,7 @@ const App: React.FC = () => {
             </div>
 
             <NavLink href="#calendar">
-               <span className="inline-flex items-center gap-2 bg-white text-black hover:bg-sanyu-red hover:text-white font-bold py-4 px-8 rounded-full transition-all transform hover:scale-105 shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:shadow-[0_0_25px_rgba(230,0,76,0.5)] cursor-pointer">
+               <span className="inline-flex items-center gap-2 bg-white text-black hover:bg-sanyu-red hover:text-white font-bold py-4 px-8 rounded-full transition-all transform hover:scale-105 shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:shadow-neon-glow cursor-pointer">
                   查看行事曆
                </span>
             </NavLink>

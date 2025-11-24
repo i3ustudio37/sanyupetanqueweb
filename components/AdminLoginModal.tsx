@@ -28,7 +28,7 @@ const AdminLoginModal: React.FC<AdminLoginModalProps> = ({ isOpen, onClose, onLo
   };
 
   return (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div className="fixed inset-0 bg-sanyu-black-80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
       <div className="bg-sanyu-dark border border-sanyu-gray rounded-xl shadow-2xl p-6 w-full max-w-sm relative">
         <button 
           onClick={onClose}
@@ -38,7 +38,7 @@ const AdminLoginModal: React.FC<AdminLoginModalProps> = ({ isOpen, onClose, onLo
         </button>
         
         <div className="flex flex-col items-center mb-6">
-          <div className="bg-sanyu-red/10 p-3 rounded-full mb-3">
+          <div className="bg-sanyu-red-10 p-3 rounded-full mb-3">
             <Lock className="text-sanyu-red" size={24} />
           </div>
           <h3 className="text-xl font-bold text-white">{title}</h3>
@@ -62,7 +62,7 @@ const AdminLoginModal: React.FC<AdminLoginModalProps> = ({ isOpen, onClose, onLo
           </div>
           <button 
             type="submit"
-            className="w-full bg-sanyu-red hover:bg-sanyu-red/80 text-white font-bold py-2 rounded-lg transition-colors"
+            className="w-full bg-sanyu-red hover:bg-sanyu-red-80 text-white font-bold py-2 rounded-lg transition-colors"
           >
             驗證
           </button>

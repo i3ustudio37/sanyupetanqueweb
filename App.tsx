@@ -410,14 +410,14 @@ const App: React.FC = () => {
                   
                   {/* Layer 44 - Secondary, Background, Smaller (50% of 43), Blended */}
                   <img 
-                    src="img/midLayer_44.png" 
+                    src="/img/midLayer_44.png" 
                     alt="Player Secondary" 
                     className="absolute left-[-5%] bottom-10 w-[50%] opacity-60 mix-blend-luminosity blur-[1px] transition-all duration-700 hover:opacity-80 hover:blur-0 z-[1]" 
                   />
                   
                   {/* Layer 43 - Main, Foreground, Larger */}
                   <img 
-                    src="img/midLayer_43.png" 
+                    src="/img/midLayer_43.png" 
                     alt="Player Main" 
                     className="relative z-10 w-full object-contain drop-shadow-2xl animate-in fade-in slide-in-from-left-8 duration-1000" 
                   />

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, addMonths, subMonths, isToday } from 'date-fns';
-import { zhTW } from 'date-fns/locale';
+import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, addMonths, isToday } from 'date-fns';
 import { ChevronLeft, ChevronRight, Plus, Calendar as CalendarIcon, Clock, Trash2 } from 'lucide-react';
 import { CalendarEvent } from '../types';
 import * as storage from '../services/storage';
@@ -28,7 +27,7 @@ const CalendarSection: React.FC<CalendarSectionProps> = ({ isAdmin }) => {
     end: endOfMonth(currentDate),
   });
 
-  const handlePrevMonth = () => setCurrentDate(subMonths(currentDate, 1));
+  const handlePrevMonth = () => setCurrentDate(addMonths(currentDate, -1));
   const handleNextMonth = () => setCurrentDate(addMonths(currentDate, 1));
 
   const handleDayClick = (day: Date) => {
@@ -95,7 +94,7 @@ const CalendarSection: React.FC<CalendarSectionProps> = ({ isAdmin }) => {
           <div className="md:col-span-7 lg:col-span-8 bg-sanyu-dark-90 p-6 rounded-2xl border border-gray-800 shadow-xl backdrop-blur-sm">
             <div className="flex justify-between items-center mb-6">
               <h3 className="text-2xl font-bold text-white">
-                {format(currentDate, 'yyyy年 MMMM', { locale: zhTW })}
+                {format(currentDate, 'yyyy年 M月')}
               </h3>
               <div className="flex gap-2">
                 <button onClick={handlePrevMonth} className="p-2 hover:bg-gray-800 rounded-full text-white transition-colors">
@@ -156,7 +155,7 @@ const CalendarSection: React.FC<CalendarSectionProps> = ({ isAdmin }) => {
             <div className="bg-sanyu-dark-90 backdrop-blur-sm text-gray-200 p-6 rounded-2xl shadow-xl h-full border border-gray-700">
               <h3 className="text-xl font-bold mb-4 flex items-center gap-2 border-b border-gray-700 pb-4 text-white">
                 <CalendarIcon className="text-sanyu-red" size={20} />
-                {selectedDate ? format(selectedDate, 'PPP', { locale: zhTW }) : '請選擇日期'}
+                {selectedDate ? format(selectedDate, 'yyyy年 M月 d日') : '請選擇日期'}
               </h3>
 
               <div className="flex-grow overflow-y-auto space-y-3 mb-4 custom-scrollbar">

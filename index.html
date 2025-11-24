@@ -21,6 +21,9 @@
       html { scroll-behavior: smooth; }
       body { background-color: var(--sanyu-black); color: #ffffff; font-family: 'Noto Sans TC', sans-serif; }
       
+      /* Global Selection Style */
+      ::selection { background-color: var(--sanyu-red); color: white; }
+
       /* Custom Scrollbar */
       ::-webkit-scrollbar { width: 8px; }
       ::-webkit-scrollbar-track { background: var(--sanyu-dark); }
@@ -85,6 +88,7 @@
       .backdrop-blur-sm { backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
       .backdrop-blur-md { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
       
+      .ring-sanyu-red { --tw-ring-color: var(--sanyu-red); }
       .focus\:ring-sanyu-red:focus { --tw-ring-color: var(--sanyu-red); }
       .focus\:border-sanyu-red:focus { border-color: var(--sanyu-red); }
       .hover\:bg-sanyu-red-80:hover { background-color: rgba(230, 0, 76, 0.8); }

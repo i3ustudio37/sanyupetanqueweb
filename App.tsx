@@ -335,7 +335,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-sanyu-black text-white font-sans selection:bg-sanyu-red selection:text-white relative">
+    <div className="min-h-screen bg-sanyu-black text-white font-sans relative">
       {/* Global Tech Background for non-hero sections */}
       <TechBackground />
 
